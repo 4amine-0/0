@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4Anime</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+/* Global */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #111;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* Header */
+header {
+  text-align: center;
+  padding: 15px 0;
+  position: relative;
+}
+header h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3em;
+  background: linear-gradient(90deg, #ff99cc, #99ccff, #ccff99, #ffcc99);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientText 5s ease infinite;
+  margin: 0;
+  opacity: 0.9;
+}
+header h2 {
+  font-size: 1.5em;
+  margin: 5px 0 20px;
+  font-weight: 500;
+  color: #aaa;
+}
+@keyframes gradientText {
+  0% {background-position:0% 50%;}
+  50% {background-position:100% 50%;}
+  100% {background-position:0% 50%;}
+}
+
+/* Carousel */
+#anime-carousel-container { position: relative; }
+#anime-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  padding: 15px;
+  scroll-behavior: smooth;
+}
+#anime-carousel::-webkit-scrollbar { display: none; }
+.carousel-card {
+  min-width: 200px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  background: #222;
+}
+.carousel-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+}
+.carousel-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(255,255,255,0.2);
+}
+/* Carousel nav buttons */
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2em;
+  color: #fff;
+  background: rgba(255,255,255,0.1);
+  padding: 10px 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  transition: 0.3s;
+  user-select: none;
+}
+.carousel-nav:hover { background: rgba(255,255,255,0.3); box-shadow: 0 0 15px #ff00cc; }
+#carousel-left { left: 5px; }
+#carousel-right { right: 5px; }
+
+/* Genre Filter */
+#genre-filter { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; }
+.genre-btn {
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 600;
+  background: #333;
+  color: #fff;
+}
+.genre-btn.active {
+  transform: scale(1.05);
+  background: #ff00cc;
+}
+
+/* Anime Grid */
+#anime-container {
+  max-width: 1200px;
+  margin: 0 auto 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 0 10px;
+}
+.anime-card {
+  background: #222;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(255,255,255,0.05);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.anime-card img { width: 100%; height: 300px; object-fit: cover; }
+.anime-meta {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  background: rgba(0,0,0,0.7);
+  padding: 5px 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Popup */
+#popup {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.95);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden; transition:0.3s; z-index:1000;
+}
+#popup.show { opacity:1; visibility:visible; }
+#popup .popup-content {
+  background:#111; padding:20px; border-radius:15px;
+  max-width:700px; color:#fff; text-align:center;
+  transform: scale(0.5); transition: transform 0.3s;
+}
+#popup.show .popup-content { transform: scale(1); }
+#popup .popup-content h2 { margin-top:0; color:#ff99cc; }
+#popup .popup-content p { font-size:14px; line-height:1.5; color:#ccc; }
+#popup .close-btn { margin-top:10px; padding:8px 15px; background:#ff00cc; border:none; border-radius:8px; color:#fff; cursor:pointer; }
+#popup .close-btn:hover { background:#333; }
+
+/* Episode list */
+#episode-list { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.episode-btn {
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: #333;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.episode-btn:hover { background: #ff00cc; }
+
+/* Video Embed */
+#popup iframe { width: 100%; height: 360px; margin-top: 15px; border-radius: 12px; }
+
+/* Comments Section */
+#comment-section { max-width:600px; margin:20px auto 60px; background:#222; padding:20px; border-radius:15px; color:#fff; box-shadow:0 5px 20px rgba(255,255,255,0.05);}
+#comment-section h3,#comment-section h4{text-align:center; margin:0 0 15px; color:#ff00cc;}
+.comments-container{display:flex; flex-direction:column; gap:12px; max-height:400px; overflow-y:auto; padding-right:5px;}
+.comment-card{display:flex; gap:12px; padding:10px; background:#333; border-radius:12px; align-items:flex-start;}
+.comment-avatar{width:40px; height:40px; border-radius:50%; background:#ff00cc; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:bold; font-size:16px; flex-shrink:0;}
+.comment-content .comment-username{font-weight:600;}
+.comment-content .comment-text{margin-top:4px; font-size:14px;}
+.comment-form input, .comment-form textarea{width:100%; padding:10px; border-radius:8px; border:1px solid #555; background:#111; color:#fff;}
+.comment-form button{margin-top:5px; padding:10px 18px; background:#ff00cc; border:none; color:#fff; border-radius:8px; cursor:pointer;}
+.comment-form button:hover{background:#333;}
+
+/* Contact */
+#contact{max-width:500px; margin:20px auto 40px; padding:15px; background:#222; border-radius:15px; text-align:center; box-shadow:0 5px 15px rgba(255,255,255,0.05);}
+#contact a{color:#ff00cc;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>4Anime</h1>
+  <h2>Top Anime</h2>
+</header>
+
+<!-- Carousel with Nav Buttons -->
+<div id="anime-carousel-container">
+  <div id="carousel-left" class="carousel-nav">&#60;</div>
+  <div id="carousel-right" class="carousel-nav">&#62;</div>
+  <div id="anime-carousel"></div>
+</div>
+
+<!-- Genre Filter -->
+<div id="genre-filter"></div>
+
+<!-- Anime Grid -->
+<div id="anime-container"></div>
+<button id="loadMore">Load More</button>
+
+<!-- Popup -->
+<div id="popup">
+  <div class="popup-content">
+    <h2 id="popup-title">Anime Title</h2>
+    <p id="popup-description">Anime description goes here...</p>
+    <div id="episode-list"></div>
+    <iframe id="popup-video" src="" frameborder="0" allowfullscreen></iframe>
+    <button class="close-btn">Close</button>
+  </div>
+</div>
+
+<!-- Comments -->
+<div id="comment-section">
+  <h3>Community Reviews</h3>
+  <div id="comments-list" class="comments-container"></div>
+  <h4>Leave Your Review</h4>
+  <div class="comment-form">
+    <input type="text" id="name" placeholder="Your Name">
+    <textarea id="comment" rows="3" placeholder="Your Comment"></textarea>
+    <button id="submitComment">Submit</button>
+  </div>
+</div>
+
+<!-- Contact -->
+<div id="contact">
+  <h3>Contact / Info</h3>
+  <p>Email: <a href="mailto:thapakshitiz16@gmail.com">thapakshitiz16@gmail.com</a></p>
+</div>
+
+<script>
+const container = document.getElementById('anime-container');
+const loadMoreBtn = document.getElementById('loadMore');
+const popup = document.getElementById('popup');
+const popupTitle = document.getElementById('popup-title');
+const popupDescription = document.getElementById('popup-description');
+const popupVideo = document.getElementById('popup-video');
+const episodeListDiv = document.getElementById('episode-list');
+const closeBtn = document.querySelector('.close-btn');
+const genreFilterDiv = document.getElementById('genre-filter');
+const carousel = document.getElementById('anime-carousel');
+const btnLeft = document.getElementById('carousel-left');
+const btnRight = document.getElementById('carousel-right');
+
+let currentPage=1;
+const perPage=25;
+let animeData=[];
+let genresSet=new Set();
+let selectedGenre='All';
+
+async function fetchTopAnime(page){
+  const res = await fetch(`https://api.jikan.moe/v4/top/anime?page=${page}&limit=${perPage}`);
+  const data = await res.json();
+  return data.data;
+}
+
+function renderGenres(){
+  genreFilterDiv.innerHTML='';
+  const genres=['All', ...Array.from(genresSet).sort()];
+  genres.forEach(g=>{
+    const btn=document.createElement('div');
+    btn.classList.add('genre-btn');
+    if(g===selectedGenre) btn.classList.add('active');
+    btn.textContent=g;
+    btn.addEventListener('click', ()=>{
+      selectedGenre=g;
+      document.querySelectorAll('.genre-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderAnime(animeData);
+      renderCarousel(animeData);
+    });
+    genreFilterDiv.appendChild(btn);
+  });
+}
+
+function renderAnime(data){
+  container.innerHTML='';
+  let filtered = selectedGenre==='All'?data:data.filter(a=>a.genres.some(g=>g.name===selectedGenre));
+  filtered.forEach((a,i)=>{
+    const card=document.createElement('div');
+    card.classList.add('anime-card');
+    let desc=a.synopsis? a.synopsis.split(' ').slice(0,60).join(' ')+'...':'No description available.';
+    let ep=a.episodes??'?';
+    let year=a.aired?.prop?.from?.year??'?';
+    card.innerHTML=`
+      <img src="${a.images.jpg.image_url}" alt="${a.title}">
+      <div class="anime-meta">
+        <span>Ep: ${ep}</span>
+        <span>⭐ ${a.score??'N/A'}</span>
+        <span>📅 ${year}</span>
+      </div>`;
+    card.addEventListener('click', ()=>{ showPopup(a); });
+    container.appendChild(card);
+  });
+}
+
+function renderCarousel(data){
+  carousel.innerHTML='';
+  let filtered = selectedGenre==='All'?data:data.filter(a=>a.genres.some(g=>g.name===selectedGenre));
+  filtered.slice(0,10).forEach(a=>{
+    const card=document.createElement('div');
+    card.classList.add('carousel-card');
+    card.innerHTML=`<img src="${a.images.jpg.image_url}" alt="${a.title}">`;
+    card.addEventListener('click', ()=>{ showPopup(a); });
+    carousel.appendChild(card);
+  });
+}
+
+function showPopup(a){
+  popupTitle.textContent=a.title;
+  popupDescription.textContent=a.synopsis? a.synopsis.split(' ').slice(0,60).join(' ')+'...':'No description.';
+  episodeListDiv.innerHTML='';
+  let total = a.episodes??5;
+  for(let i=1;i<=Math.min(total,10);i++){
+    const btn=document.createElement('button');
+    btn.classList.add('episode-btn');
+    btn.textContent='Ep '+i;
+    btn.addEventListener('click', ()=>{
+      const query = encodeURIComponent(`${a.title} episode ${i} anime`);
+      popupVideo.src=`https://www.youtube.com/embed?listType=search&list=${query}`;
+    });
+    episodeListDiv.appendChild(btn);
+  }
+  const trailerQuery = encodeURIComponent(a.title + ' anime trailer');
+  popupVideo.src = `https://www.youtube.com/embed?listType=search&list=${trailerQuery}`;
+  popup.classList.add('show');
+}
+
+async function loadAnime(){
+  loadMoreBtn.disabled=true;
+  const anime = await fetchTopAnime(currentPage);
+  animeData=[...animeData,...anime];
+  anime.forEach(a=>a.genres.forEach(g=>genresSet.add(g.name)));
+  renderGenres();
+  renderAnime(animeData);
+  renderCarousel(animeData);
+  currentPage++;
+  loadMoreBtn.disabled=false;
+}
+loadAnime();
+loadMoreBtn.addEventListener('click',()=>loadAnime());
+
+closeBtn.addEventListener('click',()=>popup.classList.remove('show'));
+popup.addEventListener('click', e=>{if(e.target===popup) popup.classList.remove('show');});
+
+// Carousel button scroll
+const scrollAmount = 250;
+btnLeft.addEventListener('click', () => { carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); });
+btnRight.addEventListener('click', () => { carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' }); });
+
+// Comments
+const nameInput=document.getElementById('name');
+const commentInput=document.getElementById('comment');
+const submitComment=document.getElementById('submitComment');
+const commentsList=document.getElementById('comments-list');
+function renderComment(name,text){
+  const div=document.createElement('div'); div.classList.add('comment-card');
+  const avatar=document.createElement('div'); avatar.classList.add('comment-avatar'); avatar.textContent=name[0].toUpperCase();
+  const content=document.createElement('div'); content.classList.add('comment-content');
+  content.innerHTML=`<div class="comment-header"><span class="comment-username">${name}</span></div><div class="comment-text">${text}</div>`;
+  div.appendChild(avatar); div.appendChild(content); commentsList.prepend(div);
+}
+submitComment.addEventListener('click',()=>{
+  const name=nameInput.value.trim(); const text=commentInput.value.trim();
+  if(name && text){renderComment(name,text); nameInput.value=''; commentInput.value='';}
+});
+// Fake comments
+const fakeComments=[{name:"AnimeFan01", text:"Sleek and professional."},{name:"OtakuGirl", text:"Love the carousel and dark theme."},{name:"MangaKing", text:"4Anime looks premium!"}];
+fakeComments.forEach(c=>renderComment(c.name,c.text));
+</script>
+</body>
+</html>
