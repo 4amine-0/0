@@ -15,6 +15,7 @@ body {
   font-family: 'Poppins', sans-serif;
   background: #111;
   color: #fff;
+  transition: background 0.7s ease, color 0.7s ease;
   overflow-x: hidden;
 }
 
@@ -24,6 +25,7 @@ header {
   padding: 15px 0;
   position: relative;
 }
+
 header h1 {
   font-family: 'Orbitron', sans-serif;
   font-size: 3em;
@@ -31,24 +33,31 @@ header h1 {
   background-size: 300% 300%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradientText 5s ease infinite;
+  animation: gradientText 6s ease infinite;
+  opacity: 0.85;
   margin: 0;
-  opacity: 0.9;
 }
+
 header h2 {
   font-size: 1.5em;
   margin: 5px 0 20px;
   font-weight: 500;
   color: #aaa;
 }
+
 @keyframes gradientText {
   0% {background-position:0% 50%;}
   50% {background-position:100% 50%;}
   100% {background-position:0% 50%;}
 }
 
+/* Carousel Container */
+#anime-carousel-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
 /* Carousel */
-#anime-carousel-container { position: relative; }
 #anime-carousel {
   display: flex;
   overflow-x: auto;
@@ -57,6 +66,7 @@ header h2 {
   scroll-behavior: smooth;
 }
 #anime-carousel::-webkit-scrollbar { display: none; }
+
 .carousel-card {
   min-width: 200px;
   flex: 0 0 auto;
@@ -75,27 +85,38 @@ header h2 {
   transform: scale(1.05);
   box-shadow: 0 10px 25px rgba(255,255,255,0.2);
 }
-/* Carousel nav buttons */
-.carousel-nav {
+
+/* Carousel Swipe Buttons */
+.carousel-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 2em;
+  background: rgba(255, 0, 204, 0.7);
+  border: none;
   color: #fff;
-  background: rgba(255,255,255,0.1);
-  padding: 10px 15px;
-  border-radius: 50%;
+  font-size: 28px;
+  padding: 10px 16px;
   cursor: pointer;
+  border-radius: 50%;
   z-index: 10;
   transition: 0.3s;
-  user-select: none;
 }
-.carousel-nav:hover { background: rgba(255,255,255,0.3); box-shadow: 0 0 15px #ff00cc; }
-#carousel-left { left: 5px; }
-#carousel-right { right: 5px; }
+.carousel-btn:hover {
+  background: rgba(255, 0, 204, 1);
+  transform: translateY(-50%) scale(1.1);
+}
+#carousel-left { left: 10px; }
+#carousel-right { right: 10px; }
 
 /* Genre Filter */
-#genre-filter { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; }
+#genre-filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
 .genre-btn {
   padding: 8px 15px;
   border-radius: 8px;
@@ -119,6 +140,7 @@ header h2 {
   gap: 20px;
   padding: 0 10px;
 }
+
 .anime-card {
   background: #222;
   border-radius: 15px;
@@ -128,7 +150,11 @@ header h2 {
   position: relative;
   transition: transform 0.3s, box-shadow 0.3s;
 }
-.anime-card img { width: 100%; height: 300px; object-fit: cover; }
+.anime-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
 .anime-meta {
   position: absolute;
   bottom: 10px;
@@ -142,6 +168,54 @@ header h2 {
   display: flex;
   justify-content: space-between;
   gap: 10px;
+}
+
+/* Load More Button */
+#loadMore {
+  position: relative;
+  margin: 40px auto;
+  display: block;
+  padding: 14px 35px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(270deg, #ff99cc, #99ccff, #ccff99, #ffcc99);
+  background-size: 600% 600%;
+  color: #111;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 20px rgba(255,153,204,0.6), 0 0 40px rgba(153,204,255,0.6);
+  animation: gradientBG 6s ease infinite;
+  overflow: hidden;
+}
+#loadMore:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(255,153,204,0.9), 0 0 50px rgba(153,204,255,0.9);
+}
+/* Sparkles */
+#loadMore::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 2%, transparent 2%) repeat;
+  background-size: 20px 20px;
+  opacity: 0.3;
+  animation: sparkle 3s linear infinite;
+}
+
+@keyframes gradientBG {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+@keyframes sparkle {
+  0% { transform: rotate(0deg) translate(0,0); }
+  50% { transform: rotate(180deg) translate(0,0); }
+  100% { transform: rotate(360deg) translate(0,0); }
 }
 
 /* Popup */
@@ -164,7 +238,13 @@ header h2 {
 #popup .close-btn:hover { background:#333; }
 
 /* Episode list */
-#episode-list { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+#episode-list {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
 .episode-btn {
   padding: 5px 10px;
   border-radius: 6px;
@@ -174,10 +254,17 @@ header h2 {
   cursor: pointer;
   transition: 0.3s;
 }
-.episode-btn:hover { background: #ff00cc; }
+.episode-btn:hover {
+  background: #ff00cc;
+}
 
 /* Video Embed */
-#popup iframe { width: 100%; height: 360px; margin-top: 15px; border-radius: 12px; }
+#popup iframe {
+  width: 100%;
+  height: 360px;
+  margin-top: 15px;
+  border-radius: 12px;
+}
 
 /* Comments Section */
 #comment-section { max-width:600px; margin:20px auto 60px; background:#222; padding:20px; border-radius:15px; color:#fff; box-shadow:0 5px 20px rgba(255,255,255,0.05);}
@@ -203,11 +290,11 @@ header h2 {
   <h2>Top Anime</h2>
 </header>
 
-<!-- Carousel with Nav Buttons -->
+<!-- Carousel -->
 <div id="anime-carousel-container">
-  <div id="carousel-left" class="carousel-nav">&#60;</div>
-  <div id="carousel-right" class="carousel-nav">&#62;</div>
+  <button id="carousel-left" class="carousel-btn"><</button>
   <div id="anime-carousel"></div>
+  <button id="carousel-right" class="carousel-btn">></button>
 </div>
 
 <!-- Genre Filter -->
@@ -247,6 +334,7 @@ header h2 {
 </div>
 
 <script>
+/* DOM Elements */
 const container = document.getElementById('anime-container');
 const loadMoreBtn = document.getElementById('loadMore');
 const popup = document.getElementById('popup');
@@ -257,6 +345,7 @@ const episodeListDiv = document.getElementById('episode-list');
 const closeBtn = document.querySelector('.close-btn');
 const genreFilterDiv = document.getElementById('genre-filter');
 const carousel = document.getElementById('anime-carousel');
+
 const btnLeft = document.getElementById('carousel-left');
 const btnRight = document.getElementById('carousel-right');
 
@@ -266,12 +355,14 @@ let animeData=[];
 let genresSet=new Set();
 let selectedGenre='All';
 
+/* Fetch Top Anime */
 async function fetchTopAnime(page){
   const res = await fetch(`https://api.jikan.moe/v4/top/anime?page=${page}&limit=${perPage}`);
   const data = await res.json();
   return data.data;
 }
 
+/* Render Genres */
 function renderGenres(){
   genreFilterDiv.innerHTML='';
   const genres=['All', ...Array.from(genresSet).sort()];
@@ -291,6 +382,7 @@ function renderGenres(){
   });
 }
 
+/* Render Anime Grid */
 function renderAnime(data){
   container.innerHTML='';
   let filtered = selectedGenre==='All'?data:data.filter(a=>a.genres.some(g=>g.name===selectedGenre));
@@ -300,18 +392,13 @@ function renderAnime(data){
     let desc=a.synopsis? a.synopsis.split(' ').slice(0,60).join(' ')+'...':'No description available.';
     let ep=a.episodes??'?';
     let year=a.aired?.prop?.from?.year??'?';
-    card.innerHTML=`
-      <img src="${a.images.jpg.image_url}" alt="${a.title}">
-      <div class="anime-meta">
-        <span>Ep: ${ep}</span>
-        <span>⭐ ${a.score??'N/A'}</span>
-        <span>📅 ${year}</span>
-      </div>`;
+    card.innerHTML=`<img src="${a.images.jpg.image_url}" alt="${a.title}"><div class="anime-meta"><span>Ep: ${ep}</span><span>⭐ ${a.score??'N/A'}</span><span>📅 ${year}</span></div>`;
     card.addEventListener('click', ()=>{ showPopup(a); });
     container.appendChild(card);
   });
 }
 
+/* Render Carousel */
 function renderCarousel(data){
   carousel.innerHTML='';
   let filtered = selectedGenre==='All'?data:data.filter(a=>a.genres.some(g=>g.name===selectedGenre));
@@ -324,6 +411,7 @@ function renderCarousel(data){
   });
 }
 
+/* Show Popup */
 function showPopup(a){
   popupTitle.textContent=a.title;
   popupDescription.textContent=a.synopsis? a.synopsis.split(' ').slice(0,60).join(' ')+'...':'No description.';
@@ -344,6 +432,7 @@ function showPopup(a){
   popup.classList.add('show');
 }
 
+/* Load Anime */
 async function loadAnime(){
   loadMoreBtn.disabled=true;
   const anime = await fetchTopAnime(currentPage);
@@ -358,19 +447,20 @@ async function loadAnime(){
 loadAnime();
 loadMoreBtn.addEventListener('click',()=>loadAnime());
 
+/* Popup Close */
 closeBtn.addEventListener('click',()=>popup.classList.remove('show'));
 popup.addEventListener('click', e=>{if(e.target===popup) popup.classList.remove('show');});
 
-// Carousel button scroll
-const scrollAmount = 250;
-btnLeft.addEventListener('click', () => { carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); });
-btnRight.addEventListener('click', () => { carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' }); });
+/* Carousel Swipe */
+btnLeft.addEventListener('click', () => { carousel.scrollBy({ left: -300, behavior: 'smooth' }); });
+btnRight.addEventListener('click', () => { carousel.scrollBy({ left: 300, behavior: 'smooth' }); });
 
-// Comments
+/* Comments */
 const nameInput=document.getElementById('name');
 const commentInput=document.getElementById('comment');
 const submitComment=document.getElementById('submitComment');
 const commentsList=document.getElementById('comments-list');
+
 function renderComment(name,text){
   const div=document.createElement('div'); div.classList.add('comment-card');
   const avatar=document.createElement('div'); avatar.classList.add('comment-avatar'); avatar.textContent=name[0].toUpperCase();
@@ -382,9 +472,11 @@ submitComment.addEventListener('click',()=>{
   const name=nameInput.value.trim(); const text=commentInput.value.trim();
   if(name && text){renderComment(name,text); nameInput.value=''; commentInput.value='';}
 });
-// Fake comments
-const fakeComments=[{name:"AnimeFan01", text:"Sleek and professional."},{name:"OtakuGirl", text:"Love the carousel and dark theme."},{name:"MangaKing", text:"4Anime looks premium!"}];
+
+/* Fake Comments */
+const fakeComments=[ {name:"AnimeFan01", text:"This site is sleek and professional."}, {name:"OtakuGirl", text:"Love the carousel and dark theme."}, {name:"MangaKing", text:"4Anime looks premium!"}];
 fakeComments.forEach(c=>renderComment(c.name,c.text));
 </script>
+
 </body>
 </html>
